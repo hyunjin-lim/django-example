@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import User
 import jwt
-from django.conf import settings
+
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
@@ -15,6 +15,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'email',
+            'username',
             'password'
         )
 
@@ -29,6 +30,7 @@ class UserSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'email',
+            'username'
             'created_at',
             'updated_at'
         )
@@ -73,10 +75,7 @@ class LoginSerializer(serializers.Serializer):
                 'This user has been deactivated.'
             )
 
-        token = jwt.encode({"id": user.id}, settings.SECRET_KEY, algorithm="HS256")
-        # redis , db 저장
-
         return {
             'email': user.email,
-            'token': token
+            'token': user.token
         }
