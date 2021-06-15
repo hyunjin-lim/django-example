@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from .models import User
-import jwt
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -30,7 +29,7 @@ class UserSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'email',
-            'username'
+            'username',
             'created_at',
             'updated_at'
         )
@@ -42,11 +41,7 @@ class LoginSerializer(serializers.Serializer):
     token = serializers.CharField(max_length=255, read_only=True)
 
     def validate(self, data):
-        # The `validate` method is where we make sure that the current
-        # instance of `LoginSerializer` has "valid". In the case of logging a
-        # user in, this means validating that they've provided an email
-        # and password and that this combination matches one of the users in
-        # our database.
+
         email = data.get('email', None)
         password = data.get('password', None)
 
