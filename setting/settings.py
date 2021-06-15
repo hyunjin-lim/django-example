@@ -168,3 +168,12 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AWS_ACCESS_KEY = env('AWS_ACCESS_KEY', default='AWS_ACCESS_KEY')
+AWS_SECRET_KEY = env('AWS_SECRET_KEY', default='AWS_SECRET_KEY')
+S3_BUCKET_NAME = env('S3_BUCKET_NAME', default='S3_BUCKET_NAME')
+CLOUD_FRONT_DISTRIBUTION_ID = env('CLOUD_FRONT_DISTRIBUTION_ID', default='CLOUD_FRONT_DISTRIBUTION_ID')
+CLOUD_FRONT_DOMAIN = env('CLOUD_FRONT_DOMAIN', default='CLOUD_FRONT_DOMAIN')
+REDIS_HOST = env('REDIS_HOST', default='127.0.0.1')
+REDIS_PORT = env('REDIS_PORT', default='6379')
+REDIS_DB = env('REDIS_DB', default='0')

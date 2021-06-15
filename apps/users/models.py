@@ -7,6 +7,7 @@ from .managers import UserManager
 from datetime import datetime, timedelta
 import jwt
 from django.conf import settings
+from setting.redis_connect import r
 
 
 class User(AbstractBaseUser, PermissionsMixin, TimestampedModel):
@@ -27,7 +28,9 @@ class User(AbstractBaseUser, PermissionsMixin, TimestampedModel):
 
     @property
     def token(self):
-        return self._generate_jwt_token()
+        token = self._generate_jwt_token()
+        self._set_redis(token)
+        return token
 
     def _generate_jwt_token(self):
         """
@@ -40,3 +43,9 @@ class User(AbstractBaseUser, PermissionsMixin, TimestampedModel):
             'id': self.pk,
             'exp': int(dt.strftime('%s'))
         }, settings.SECRET_KEY, algorithm='HS256')
+
+    def _set_redis(self, token):
+        dt = timedelta(days=7)
+        key = '{0}:{1}'.format('user:token', token)
+        r.hmset(key, {'id': self.pk, 'email': self.email})
+        r.expire(key, int(dt.total_seconds()))
