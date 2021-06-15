@@ -147,6 +147,11 @@ USE_TZ = True
 
 AUTH_USER_MODEL = 'users.User'
 
+AUTHENTICATION_BACKENDS = (
+    'apps.users.user_backend.UserBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
 REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'apps.core.exceptions.core_exception_handler',
     'DEFAULT_PERMISSION_CLASSES': (

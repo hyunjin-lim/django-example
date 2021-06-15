@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import User
+from django.contrib.auth import authenticate
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -54,15 +55,24 @@ class LoginSerializer(serializers.Serializer):
                 'A password is required to log in.'
             )
 
-        try:
-            user = User.objects.get(email=email)
-        except User.DoesNotExist:
+        user = authenticate(username=email, password=password)
+
+        # If no user was found matching this email/password combination then
+        # `authenticate` will return `None`. Raise an exception in this case.
+        if user is None:
             raise serializers.ValidationError(
                 'A user with this email and password was not found.'
             )
 
-        if not user.check_password(password):
-            raise serializers.ValidationError('invalid password')
+        # try:
+        #     user = User.objects.get(email=email)
+        # except User.DoesNotExist:
+        #     raise serializers.ValidationError(
+        #         'A user with this email and password was not found.'
+        #     )
+        #
+        # if not user.check_password(password):
+        #     raise serializers.ValidationError('invalid password')
 
         if not user.is_active:
             raise serializers.ValidationError(
