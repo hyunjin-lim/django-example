@@ -3,15 +3,26 @@ import jwt
 from django.conf import settings
 from apps.users.models import User
 
-from rest_framework import exceptions
+from rest_framework import authentication, exceptions
 from rest_framework.authentication import TokenAuthentication
 import time
 
 
-class JSONWebTokenAuthentication(TokenAuthentication):
-    def authenticate_credentials(self, key):
+class JSONWebTokenAuthentication(authentication.BaseAuthentication):
+    authentication_header_prefix = 'Bearer'
+
+    def authenticate(self, key):
+        auth_header = authentication.get_authorization_header(key).split()
+        auth_header_prefix = self.authentication_header_prefix.lower()
+
+        prefix = auth_header[0].decode('utf-8')
+        token = auth_header[1].decode('utf-8')
+
+        if prefix.lower() != auth_header_prefix:
+            return None
+
         try:
-            payload = jwt.decode(key, settings.SECRET_KEY, algorithms="HS256")
+            payload = jwt.decode(token, settings.SECRET_KEY, algorithms="HS256")
             expire = payload.get('exp')
 
             if int(time.time()) > expire:
