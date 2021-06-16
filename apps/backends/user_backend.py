@@ -16,10 +16,6 @@ class UserBackend(BaseBackend):
             if user.check_password(password):
                 return user
         except User.DoesNotExist:
-            # user = User(username=username)
-            # user.is_staff = True
-            # user.is_superuser = True
-            # user.save()
             return None
 
     def get_user(self, user_id):

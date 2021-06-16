@@ -16,6 +16,8 @@ from environ import Env
 env = Env()
 env.read_env(env_file='.env')
 
+AUTH_TOKEN = env('AUTH_TOKEN', default='user:token')
+O_AUTH_TOKEN = env('O_AUTH_TOKEN', default='order_user:token')
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -148,7 +150,7 @@ USE_TZ = True
 AUTH_USER_MODEL = 'users.User'
 
 AUTHENTICATION_BACKENDS = (
-    'apps.users.user_backend.UserBackend',
+    'apps.backends.user_backend.UserBackend',
     'django.contrib.auth.backends.ModelBackend',
 )
 
@@ -158,6 +160,8 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'apps.core.redis_auth.RedisAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
         'apps.core.jwt_auth.JSONWebTokenAuthentication',
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
