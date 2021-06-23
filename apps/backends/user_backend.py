@@ -7,6 +7,7 @@ from django.contrib.auth.hashers import check_password
 class UserBackend(BaseBackend):
 
     def authenticate(self, request, username=None, password=None):
+        print('user_backend')
         if '@' in username:
             kwargs = {'email': username}
         else:

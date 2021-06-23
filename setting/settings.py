@@ -16,6 +16,10 @@ from environ import Env
 env = Env()
 env.read_env(env_file='.env')
 
+AZURE_AUTHORITY = env('AZURE_AUTHORITY', default='')
+AZURE_CLIENT_ID = env('AZURE_CLIENT_ID', default='')
+AZURE_ENDPOINT = env('AZURE_ENDPOINT', default='https://graph.microsoft.com/v1.0/me')
+
 AUTH_TOKEN = env('AUTH_TOKEN', default='user:token')
 O_AUTH_TOKEN = env('O_AUTH_TOKEN', default='order_user:token')
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -150,6 +154,7 @@ USE_TZ = True
 AUTH_USER_MODEL = 'users.User'
 
 AUTHENTICATION_BACKENDS = (
+    'apps.backends.azure_backend.UserBackend',
     'apps.backends.user_backend.UserBackend',
     'django.contrib.auth.backends.ModelBackend',
 )
