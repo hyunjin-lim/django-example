@@ -19,5 +19,9 @@ class Profile(TimestampedModel):
 
     objects = ProfileManager()
 
+    class Meta:
+        db_table = 'profiles'
+        ordering = ['-id']
+
     def __str__(self):
         return self.user.username

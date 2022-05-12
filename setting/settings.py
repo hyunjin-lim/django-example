@@ -33,9 +33,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = env('SECRET_KEY', default='')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('IS_DEBUG', default=False)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -106,14 +106,14 @@ LOGGING = {
 DATABASES = {
     'default': {
         'ENGINE': 'mysql.connector.django',
-        'NAME': 'django_study',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': '127.0.0.1',
-        'PORT': '3306',
+        'NAME': env('MASTER_DB_NAME', default=''),
+        'USER': env('MASTER_DB_USER', default=''),
+        'PASSWORD': env('MASTER_DB_PASSWORD', default=''),
+        'HOST': env('MASTER_DB_HOST', default=''),
+        'PORT': env('MASTER_DB_PORT', default=''),
         'OPTIONS': {
             'sql_mode': 'STRICT_TRANS_TABLES',
-            'charset': 'utf8mb4',
+            # 'charset': 'utf8mb4',
         },
     }
 }
@@ -154,7 +154,7 @@ USE_TZ = True
 AUTH_USER_MODEL = 'users.User'
 
 AUTHENTICATION_BACKENDS = (
-    'apps.backends.azure_backend.UserBackend',
+    # 'apps.backends.azure_backend.UserBackend',
     'apps.backends.user_backend.UserBackend',
     'django.contrib.auth.backends.ModelBackend',
 )
@@ -166,9 +166,10 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'apps.core.redis_auth.RedisAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
         'apps.core.jwt_auth.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ),
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json',
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 20,
 }
@@ -183,11 +184,11 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AWS_ACCESS_KEY = env('AWS_ACCESS_KEY', default='AWS_ACCESS_KEY')
-AWS_SECRET_KEY = env('AWS_SECRET_KEY', default='AWS_SECRET_KEY')
-S3_BUCKET_NAME = env('S3_BUCKET_NAME', default='S3_BUCKET_NAME')
-CLOUD_FRONT_DISTRIBUTION_ID = env('CLOUD_FRONT_DISTRIBUTION_ID', default='CLOUD_FRONT_DISTRIBUTION_ID')
-CLOUD_FRONT_DOMAIN = env('CLOUD_FRONT_DOMAIN', default='CLOUD_FRONT_DOMAIN')
+AWS_ACCESS_KEY = env('AWS_ACCESS_KEY', default='')
+AWS_SECRET_KEY = env('AWS_SECRET_KEY', default='')
+S3_BUCKET_NAME = env('S3_BUCKET_NAME', default='')
+CLOUD_FRONT_DISTRIBUTION_ID = env('CLOUD_FRONT_DISTRIBUTION_ID', default='')
+CLOUD_FRONT_DOMAIN = env('CLOUD_FRONT_DOMAIN', default='')
 REDIS_HOST = env('REDIS_HOST', default='127.0.0.1')
 REDIS_PORT = env('REDIS_PORT', default='6379')
 REDIS_DB = env('REDIS_DB', default='0')

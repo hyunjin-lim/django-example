@@ -22,6 +22,10 @@ class User(AbstractBaseUser, PermissionsMixin, TimestampedModel):
 
     objects = UserManager()
 
+    class Meta:
+        db_table = 'users'
+        ordering = ['-id']
+
     def __str__(self):
         return self.email
 
@@ -47,5 +51,5 @@ class User(AbstractBaseUser, PermissionsMixin, TimestampedModel):
     def _set_redis(self, token):
         dt = timedelta(days=7)
         key = '{0}:{1}'.format('user:token', token)
-        r.hmset(key, {'id': self.pk, 'email': self.email})
+        r.hset(key, "id", self.pk)
         r.expire(key, int(dt.total_seconds()))
